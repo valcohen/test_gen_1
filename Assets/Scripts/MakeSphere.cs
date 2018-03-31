@@ -11,21 +11,27 @@ public class MakeSphere : MonoBehaviour {
     public Vector3 yScale = new Vector3 (0.01f, 1.00f, 0.01f);
     public Vector3 zScale = new Vector3 (0.01f, 0.01f, 1.00f);
 
-
-
+    // private members
     private static Vector3 xAxis = new Vector3(1, 0, 0);
     private static Vector3 yAxis = new Vector3(0, 1, 0);
     private static Vector3 zAxis = new Vector3(0, 0, 1);
 
+    private GameObject sphere;
+    private Vector3 sphereStartScale = new Vector3 (0.01f, 0.01f, 0.01f);
+    private Vector3 sphereScaleLimit = new Vector3(1f, 1f, 1f);
+
     // Use this for initialization
 	void Start () {
-        Vector3     initialPos = new Vector3 (0, 1, 0);
+        Vector3     initialPos = new Vector3 (0, 0, 0);
         float       interval = 180f / steps;    // 180 = half-circle to avoid drawing on top of ourselves
 
         genCubesOnAxis (initialPos, interval, xAxis, zScale);
         genCubesOnAxis (initialPos, interval, yAxis, xScale);
         genCubesOnAxis (initialPos, interval, zAxis, yScale);
-		
+	
+        genSphere (initialPos);
+
+
 	}
 
     void genCubesOnAxis (Vector3 initialPos, float interval, Vector3 axis, Vector3 scale)
@@ -42,7 +48,7 @@ public class MakeSphere : MonoBehaviour {
             newObject.transform.localScale      = scale;
             newObject.transform.localRotation   = rotation;
 
-            newObject.transform.SetParent (baseObject);
+            newObject.transform.SetParent (baseObject, false);  // worldPosStayes false = keep local pos
             // newObject = Instantiate (baseObject, initialPos, rotation);
 
             // setColor
@@ -57,19 +63,55 @@ public class MakeSphere : MonoBehaviour {
             UnityEngine.Debug.Log (string.Format ("cube: {0}", newObject.transform.localRotation));
         }
     }
+
+    void genSphere (Vector3 initialPos)
+    {
+        sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphere.transform.position        = initialPos;
+        sphere.transform.localScale      = new Vector3(0.01f, 0.01f, 0.01f);
+        sphere.transform.localRotation   = new Quaternion();
+
+        sphere.transform.SetParent (baseObject, false);  // worldPosStayes false = keep local pos
+
+        Color newColor = Color.HSVToRGB (0, 1f, 1f);
+        Material material = sphere.GetComponent<Renderer> ().material;
+        material.color = newColor;
+    }
 	
 	// Update is called once per frame
 	void Update () {
         float interval = timeScale * Time.deltaTime;
 
-        // Rotate the object around the World's X axis at 1 degree per second
-        baseObject.transform.Rotate(Vector3.right * interval, Space.World);
+        // Rotate the object around the local axes at <timeScale> degrees per second
+        baseObject.transform.Rotate(Vector3.right   * interval);    // X axis
+        baseObject.transform.Rotate(Vector3.up      * interval);    // Y 
+        baseObject.transform.Rotate(Vector3.forward * interval);    // Z
 
-        // ...also rotate around the World's Y axis
-        baseObject.transform.Rotate(Vector3.up * interval, Space.World);
+        // setColor
+        Material material = sphere.GetComponentInParent<Renderer>().material;
+        float h, s, v;
 
-        // .. and Z
-        baseObject.transform.Rotate(Vector3.forward * interval, Space.World);
+        Color.RGBToHSV (material.color, out h, out s, out v);
+        h += interval * 10; 
+        s = 1f;
+        v = 1f;
+        // material.color = Color.HSVToRGB (h, s, v);
+
+        Vector3 newScale = sphere.transform.localScale + new Vector3(0.01f, 0.01f, 0.01f);
+
+        bool grow = newScale.magnitude < sphereScaleLimit.magnitude;
+        if (grow) {
+            sphere.transform.localScale += newScale;
+        } else {
+            sphere.transform.localScale -= newScale;
+        }
+
+        sphere.transform.localScale = (newScale.magnitude < sphereScaleLimit.magnitude)
+                                    ? newScale
+                                    : sphereStartScale;
+
+
+        UnityEngine.Debug.Log (string.Format ("hue: {0}", h));
 
 
 
