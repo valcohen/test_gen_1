@@ -432,3 +432,4 @@ MonoBehaviour:
   xScale: {x: 1, y: 0.01, z: 0.01}
   yScale: {x: 0.01, y: 1, z: 0.01}
   zScale: {x: 0.01, y: 0.01, z: 1}
+  sphereScaleIncrement: 0.001

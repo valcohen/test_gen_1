@@ -11,6 +11,8 @@ public class MakeSphere : MonoBehaviour {
     public Vector3 yScale = new Vector3 (0.01f, 1.00f, 0.01f);
     public Vector3 zScale = new Vector3 (0.01f, 0.01f, 1.00f);
 
+    public float sphereScaleIncrement = 0.01f;
+
     // private members
     private static Vector3 xAxis = new Vector3(1, 0, 0);
     private static Vector3 yAxis = new Vector3(0, 1, 0);
@@ -67,15 +69,18 @@ public class MakeSphere : MonoBehaviour {
     void genSphere (Vector3 initialPos)
     {
         sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere.transform.position        = initialPos;
-        sphere.transform.localScale      = new Vector3(0.01f, 0.01f, 0.01f);
-        sphere.transform.localRotation   = new Quaternion();
+        sphere.transform.position       = initialPos;
+        sphere.transform.localScale     = sphereStartScale;
+        sphere.transform.localRotation  = new Quaternion();
 
         sphere.transform.SetParent (baseObject, false);  // worldPosStayes false = keep local pos
 
+        Renderer sphereRenderer = sphere.GetComponent<Renderer> ();
+
         Color newColor = Color.HSVToRGB (0, 1f, 1f);
-        Material material = sphere.GetComponent<Renderer> ().material;
+        Material material = sphereRenderer.material;
         material.color = newColor;
+        sphereRenderer.receiveShadows = true;
     }
 	
 	// Update is called once per frame
@@ -92,18 +97,20 @@ public class MakeSphere : MonoBehaviour {
         float h, s, v;
 
         Color.RGBToHSV (material.color, out h, out s, out v);
-        h += interval * 10; 
+        h += interval / 100; 
         s = 1f;
         v = 1f;
-        // material.color = Color.HSVToRGB (h, s, v);
+        material.color = Color.HSVToRGB (h, s, v);
 
-        Vector3 newScale = sphere.transform.localScale + new Vector3(0.01f, 0.01f, 0.01f);
+        Vector3 newScale = sphere.transform.localScale + new Vector3(
+            sphereScaleIncrement, sphereScaleIncrement, sphereScaleIncrement
+        );
 
         bool grow = newScale.magnitude < sphereScaleLimit.magnitude;
         if (grow) {
-            sphere.transform.localScale += newScale;
+        
         } else {
-            sphere.transform.localScale -= newScale;
+        
         }
 
         sphere.transform.localScale = (newScale.magnitude < sphereScaleLimit.magnitude)
@@ -111,7 +118,7 @@ public class MakeSphere : MonoBehaviour {
                                     : sphereStartScale;
 
 
-        UnityEngine.Debug.Log (string.Format ("hue: {0}", h));
+        UnityEngine.Debug.Log (string.Format ("interval: {0}, hue: {0}", interval, h));
 
 
 
