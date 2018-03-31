@@ -108,9 +108,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd4c98b4ceb84786be126bf7c2edd6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goal: {fileID: 4201660079472268, guid: 9caa5a5be98da4e1292589b45a0feda8, type: 2}
+  goal: {x: 0, y: 0, z: 0}
   goalDistance: 90
-  parent: {fileID: 0}
 --- !u!195 &195566346318506906
 NavMeshAgent:
   m_ObjectHideFlags: 1
