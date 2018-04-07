@@ -77,10 +77,7 @@ public class MakeSphere : MonoBehaviour {
             v = 1f;
             Color newColor = Color.HSVToRGB (h, s, v);
 
-            Renderer newObjectRenderer = newObject.GetComponent<Renderer> ();
-            var newMaterial = new Material(newObjectRenderer.sharedMaterial);
-            newMaterial.color = newColor;
-            newObjectRenderer.sharedMaterial = newMaterial;
+            setSharedColor (newObject.GetComponent<Renderer> (), newColor);
 
             UnityEngine.Debug.Log (string.Format ("interval: {0}, rot: {1}, hue: {2}", interval, angle, h));
             UnityEngine.Debug.Log (string.Format ("cube: {0}", newObject.transform.localRotation));
@@ -101,15 +98,16 @@ public class MakeSphere : MonoBehaviour {
         Color newColor = Color.HSVToRGB (0, 1f, 1f);
 
         Renderer sphereRenderer = sphere.GetComponent<Renderer> ();
-        var newMaterial = new Material(sphereRenderer.sharedMaterial);
-        newMaterial.color = newColor;
-        sphereRenderer.sharedMaterial = newMaterial;
+
+        setSharedColor (sphereRenderer, newColor);
 
         sphereRenderer.receiveShadows = true;
     }
 	
 	// Update is called once per frame
 	void Update () {
+        if (! Application.isPlaying) { return; }
+
         float interval = timeScale * Time.deltaTime;
 
         // Rotate the object around the local axes at <timeScale> degrees per second
@@ -129,9 +127,7 @@ public class MakeSphere : MonoBehaviour {
         v = 1f;
         Color newColor = Color.HSVToRGB (h, s, v);
 
-        var newMaterial = new Material(sphereRenderer.sharedMaterial);
-        newMaterial.color = newColor;
-        sphereRenderer.sharedMaterial = newMaterial;
+        setSharedColor (sphereRenderer, newColor);
 
         Vector3 newScale = sphere.transform.localScale + new Vector3(
             sphereScaleIncrement, sphereScaleIncrement, sphereScaleIncrement
@@ -150,4 +146,11 @@ public class MakeSphere : MonoBehaviour {
                                     : sphereStartScale;
 
 	}
+
+    static void setSharedColor (Renderer renderer, Color newColor)
+    {
+        var newMaterial = new Material (renderer.sharedMaterial);
+        newMaterial.color = newColor;
+        renderer.sharedMaterial = newMaterial;
+    }
 }
