@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// [ExecuteInEditMode]
+[ExecuteInEditMode]
 public class MakeSphere : MonoBehaviour {
     public Transform    baseObject;
     public int          steps;
@@ -76,8 +76,12 @@ public class MakeSphere : MonoBehaviour {
             s = 1f;
             v = 1f;
             Color newColor = Color.HSVToRGB (h, s, v);
-            Material material = newObject.GetComponent<Renderer> ().material; //.sharedMaterial; - works in Edit, but shares colors
-            material.color = newColor;
+
+            Renderer newObjectRenderer = newObject.GetComponent<Renderer> ();
+            var newMaterial = new Material(newObjectRenderer.sharedMaterial);
+            newMaterial.color = newColor;
+            newObjectRenderer.sharedMaterial = newMaterial;
+
             UnityEngine.Debug.Log (string.Format ("interval: {0}, rot: {1}, hue: {2}", interval, angle, h));
             UnityEngine.Debug.Log (string.Format ("cube: {0}", newObject.transform.localRotation));
 
@@ -94,11 +98,13 @@ public class MakeSphere : MonoBehaviour {
 
         sphere.transform.SetParent (baseObject, false);  // worldPosStayes false = keep local pos
 
-        Renderer sphereRenderer = sphere.GetComponent<Renderer> ();
-
         Color newColor = Color.HSVToRGB (0, 1f, 1f);
-        Material material = sphereRenderer.material; //.sharedMaterial; - works in Edit, but shares colors
-        material.color = newColor;
+
+        Renderer sphereRenderer = sphere.GetComponent<Renderer> ();
+        var newMaterial = new Material(sphereRenderer.sharedMaterial);
+        newMaterial.color = newColor;
+        sphereRenderer.sharedMaterial = newMaterial;
+
         sphereRenderer.receiveShadows = true;
     }
 	
@@ -112,15 +118,20 @@ public class MakeSphere : MonoBehaviour {
         baseObject.transform.Rotate(Vector3.forward * interval);    // Z
 
         // set sphere Color
-
-        Material material = sphere.GetComponentInParent<Renderer>().material; //.sharedMaterial; - works in Edit, but shares colors
+        if (sphere == null) { return; }
         float h, s, v;
 
-        Color.RGBToHSV (material.color, out h, out s, out v);
+        Renderer sphereRenderer = sphere.GetComponent<Renderer> ();
+
+        Color.RGBToHSV (sphereRenderer.sharedMaterial.color, out h, out s, out v);
         h += interval / 10; 
         s = 1f;
         v = 1f;
-        material.color = Color.HSVToRGB (h, s, v);
+        Color newColor = Color.HSVToRGB (h, s, v);
+
+        var newMaterial = new Material(sphereRenderer.sharedMaterial);
+        newMaterial.color = newColor;
+        sphereRenderer.sharedMaterial = newMaterial;
 
         Vector3 newScale = sphere.transform.localScale + new Vector3(
             sphereScaleIncrement, sphereScaleIncrement, sphereScaleIncrement
