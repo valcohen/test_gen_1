@@ -25,7 +25,7 @@ public class Walkers : MonoBehaviour {
         walkers = new List<Transform>(rows * cols);
 
         var startX = transform.position.x;
-        var startY = 1f;
+        var startY = transform.position.y; // 1f;
         var startZ = transform.position.z;
 
         var rot = new Quaternion();
