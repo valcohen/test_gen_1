@@ -219,6 +219,7 @@ MonoBehaviour:
   colSpace: 4.5
   walkerPrefab: {fileID: 4453088157009074, guid: a3469e53f448b448b8b620793591b75b,
     type: 2}
+  walkerCam: {fileID: 0}
   initialGoal: {x: 0, y: 0, z: 49}
   initialColor: {r: 0.3451557, g: 0.48701823, b: 0.8235294, a: 0}
 --- !u!1001 &667390771

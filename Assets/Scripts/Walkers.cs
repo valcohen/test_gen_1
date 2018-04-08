@@ -12,6 +12,7 @@ public class Walkers : MonoBehaviour {
     public float        rowSpace = 3;
     public float        colSpace = 3;
 	public Transform    walkerPrefab;
+    public Camera       walkerCam;
     public Vector3      initialGoal;
     public Color        initialColor;
 
@@ -45,6 +46,15 @@ public class Walkers : MonoBehaviour {
 
                 var pos     = new Vector3 (x, startY, z);
                 var walker  = Instantiate (walkerPrefab, pos, rot, this.transform);
+                walker.gameObject.name = "Walker r" + r + "c" + c;
+
+                var randR = rnd.Next (rows);
+                var randC = rnd.Next (cols);
+                if (c == randC && r == randR) {
+                    UnityEngine.Debug.Log ("attached camera to " + walker.name);
+
+                    walker.gameObject.AddComponent<Camera>();
+                }
 
                 var moveTo  = walker.GetComponentInParent<MoveTo> ();
                 moveTo.goal = currentGoal;
@@ -75,7 +85,7 @@ public class Walkers : MonoBehaviour {
                 float goalZ = randZ - 2.5f;     // +/- 5 Z offset
 
                 Vector3 newGoal = new Vector3( goalX, initialGoal.y, initialGoal.z + goalZ );
-                UnityEngine.Debug.Log ("walkers: " + newGoal);
+                // UnityEngine.Debug.Log ( walker.name + ":  " + newGoal);
 
                 currentGoal = newGoal;
 
@@ -85,7 +95,7 @@ public class Walkers : MonoBehaviour {
 		}
 
         watch.Stop ();
-        UnityEngine.Debug.Log (string.Format("generated {0} walkers in {1} milliseconds", walkers.Count, watch.ElapsedMilliseconds));
+        // UnityEngine.Debug.Log (string.Format("generated {0} walkers in {1} milliseconds", walkers.Count, watch.ElapsedMilliseconds));
 
 	}
 }
