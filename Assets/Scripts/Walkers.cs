@@ -75,6 +75,13 @@ public class Walkers : MonoBehaviour {
                 Material material = walker.GetComponentInParent<Renderer>().material;
                 material.color = currentColor;
 
+
+                Material trail = walker.GetComponent<TrailRenderer>().material;
+
+                // Set the color of the material to tint the trail.
+                trail.SetColor("_Color", currentColor);
+
+
                 // setNextGoal
                 // new goals is anywhere on X and +/-2.5 of the initial goal's Z
                 // TODO: extract to a named function, support plugging in diff. goal functions
