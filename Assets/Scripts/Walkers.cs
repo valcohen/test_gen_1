@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
@@ -35,6 +36,8 @@ public class Walkers : MonoBehaviour {
         var rnd = new System.Random();
 
         var interval = 1.0f / cols;
+        var randR = rnd.Next (rows);
+        var randC = rnd.Next (cols);
 
 		for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
@@ -46,13 +49,10 @@ public class Walkers : MonoBehaviour {
 
                 var pos     = new Vector3 (x, startY, z);
                 var walker  = Instantiate (walkerPrefab, pos, rot, this.transform);
-                walker.gameObject.name = "Walker r" + r + "c" + c;
+                walker.gameObject.name = String.Format("Walker r{0}c{1}", r, c);
 
-                var randR = rnd.Next (rows);
-                var randC = rnd.Next (cols);
                 if (c == randC && r == randR) {
                     UnityEngine.Debug.Log ("attached camera to " + walker.name);
-
                     walker.gameObject.AddComponent<Camera>();
                 }
 
