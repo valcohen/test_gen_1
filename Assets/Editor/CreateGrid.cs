@@ -9,7 +9,7 @@ public class CreateGrid : ScriptableWizard {
     public int rows     = 10;
     public int columns  = 10;
     public int layers   = 1;
-    public float gap    = 10f;
+    public float gap    = 2f;
 
     [MenuItem("MyTools/Create Grid...")]
     static void CreateWizard()
@@ -32,9 +32,17 @@ public class CreateGrid : ScriptableWizard {
 
         if (prefab == null) { prefab = createSphere (parent).transform; }
 
-        for (var r = 0; r < rows; r++) {
-            var instance = Instantiate (prefab, pos, rot, parent.transform);
-            pos.x += gap;
+        for (var l = 0; l < layers; l++) {
+            for (var c = 0; c < columns; c++) {
+                for (var r = 0; r < rows; r++) {
+                    var instance = Instantiate (prefab, pos, rot, parent.transform);
+                    pos.x += gap;
+                }
+                pos.x = 0;
+                pos.z += gap;
+            }
+            pos.z = 0;
+            pos.y += gap;
         }
     }
 
