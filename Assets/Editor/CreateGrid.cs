@@ -11,7 +11,7 @@ public class CreateGrid : ScriptableWizard {
     public int layers   = 1;
     public float gap    = 2f;
 
-    [MenuItem("MyTools/Create Grid...")]
+    [MenuItem("Custom/Create Grid...")]
     static void CreateWizard()
     {
         ScriptableWizard.DisplayWizard ("Create Grid of Objects", typeof(CreateGrid), "Create");
@@ -33,9 +33,10 @@ public class CreateGrid : ScriptableWizard {
         if (prefab == null) { prefab = createSphere (parent).transform; }
 
         for (var l = 0; l < layers; l++) {
-            for (var c = 0; c < columns; c++) {
-                for (var r = 0; r < rows; r++) {
+            for (var r = 0; r < rows; r++) {
+                for (var c = 0; c < columns; c++) {
                     var instance = Instantiate (prefab, pos, rot, parent.transform);
+                    instance.name = string.Format ("L{0:D2}-R{1:D2}-C{2:D2}", l, r, c);
                     pos.x += gap;
                 }
                 pos.x = 0;
