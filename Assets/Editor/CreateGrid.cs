@@ -36,6 +36,7 @@ public class CreateGrid : ScriptableWizard {
         float xStep = 1.0f / columns; // r
         float yStep = 1.0f / layers;  // g
         float zStep = 1.0f / rows;    // b
+        float currentR, currentG, currentB;
         Debug.Log(string.Format("color steps: {0} {1} {2}", xStep, yStep, zStep));
 
         for (var l = 0; l < layers; l++) {
@@ -49,21 +50,30 @@ public class CreateGrid : ScriptableWizard {
                         Debug.Log (instance.name + " color " + prefabColor.ToString ());
 
                         setSharedColor (instance.GetComponentInParent<Renderer>(), prefabColor);
-                        prefabColor.r += xStep;
+                        currentR = (prefabColor.r + xStep < 1.0) 
+                            ? prefabColor.r + xStep
+                            : 0;
+                        prefabColor.r = currentR;
                     }
                 }
                 pos.x = 0;
                 pos.z += gap;
 
                 if (color) {
-                    prefabColor.b += zStep;
+                    currentB = (prefabColor.b + zStep < 1.0) 
+                        ? prefabColor.b + zStep
+                        : 0;
+                    prefabColor.b = currentB;
                 }
             }
             pos.z = 0;
             pos.y += gap;
 
             if (color) {
-                prefabColor.g += yStep;
+                currentG = (prefabColor.g + yStep < 1.0) 
+                    ? prefabColor.r + yStep
+                    : 0;
+                prefabColor.g = currentG;
             }
         }
     }
