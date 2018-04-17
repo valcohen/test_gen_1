@@ -10,6 +10,7 @@ public class CreateGrid : ScriptableWizard {
     public int columns  = 10;
     public int layers   = 1;
     public float gap    = 2f;
+    public bool color   = true;
 
     [MenuItem("Custom/Create Grid...")]
     static void CreateWizard()
@@ -27,23 +28,43 @@ public class CreateGrid : ScriptableWizard {
         Vector3     pos     = Vector3.zero;
         Quaternion  rot     = Quaternion.identity;
         Transform   parent  = new GameObject ("gridParent").transform;
-
         parent.transform.position = pos;
-
         if (prefab == null) { prefab = createSphere (parent).transform; }
+
+        Color prefabColor = new Color (0, 0, 0);
+        // normalize color range (0..1): 1 / dimension 
+        float xStep = 1.0f / columns; // r
+        float yStep = 1.0f / layers;  // g
+        float zStep = 1.0f / rows;    // b
+        Debug.Log(string.Format("color steps: {0} {1} {2}", xStep, yStep, zStep));
 
         for (var l = 0; l < layers; l++) {
             for (var r = 0; r < rows; r++) {
                 for (var c = 0; c < columns; c++) {
-                    var instance = Instantiate (prefab, pos, rot, parent.transform);
+                    Transform instance = Instantiate (prefab, pos, rot, parent.transform);
                     instance.name = string.Format ("L{0:D2}-R{1:D2}-C{2:D2}", l, r, c);
                     pos.x += gap;
+
+                    if (color) {
+                        Debug.Log (instance.name + " color " + prefabColor.ToString ());
+
+                        setSharedColor (instance.GetComponentInParent<Renderer>(), prefabColor);
+                        prefabColor.r += xStep;
+                    }
                 }
                 pos.x = 0;
                 pos.z += gap;
+
+                if (color) {
+                    prefabColor.b += zStep;
+                }
             }
             pos.z = 0;
             pos.y += gap;
+
+            if (color) {
+                prefabColor.g += yStep;
+            }
         }
     }
 
@@ -63,4 +84,12 @@ public class CreateGrid : ScriptableWizard {
 
         return spherePrefab;
     }
+
+    static void setSharedColor (Renderer renderer, Color newColor)
+    {
+        var newMaterial = new Material (renderer.sharedMaterial);
+        newMaterial.color = newColor;
+        renderer.sharedMaterial = newMaterial;
+    }
+
 }
