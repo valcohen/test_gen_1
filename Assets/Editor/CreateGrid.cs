@@ -71,7 +71,7 @@ public class CreateGrid : ScriptableWizard {
 
             if (color) {
                 currentG = (prefabColor.g + yStep < 1.0) 
-                    ? prefabColor.r + yStep
+                    ? prefabColor.g + yStep
                     : 0;
                 prefabColor.g = currentG;
             }
