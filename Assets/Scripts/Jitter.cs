@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Jitter : MonoBehaviour {
 
+    public bool  move = true;
     public float radius = 0.25f;
+
+    public bool rotate = true;
+    public float maxAngle = 15;
 
     private static System.Random rnd = new System.Random();
 
@@ -15,22 +19,32 @@ public class Jitter : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        var p = this.transform.position;
-
-        var moveX = (float)rnd.NextDouble() * radius;
-        var moveY = (float)rnd.NextDouble() * radius;
-        var moveZ = (float)rnd.NextDouble() * radius;
-
         bool addX = (rnd.Next(0, 100) < 50);
         bool addY = (rnd.Next(0, 100) < 50);
         bool addZ = (rnd.Next(0, 100) < 50);
 
-        var jitter = new Vector3 (
-                         addX ? moveX : -moveX,
-                         addY ? moveY : -moveY,
-                         addZ ? moveZ : -moveZ
-        );
-        
-        this.transform.Translate (jitter);
+        if (move) {
+            var moveX = (float)rnd.NextDouble() * radius;
+            var moveY = (float)rnd.NextDouble() * radius;
+            var moveZ = (float)rnd.NextDouble() * radius;
+
+            this.transform.Translate (
+                addX ? moveX : -moveX,
+                addY ? moveY : -moveY,
+                addZ ? moveZ : -moveZ
+            );
+        }
+
+        if (rotate) {
+            var rotX = (float)rnd.NextDouble() * maxAngle;
+            var rotY = (float)rnd.NextDouble() * maxAngle;
+            var rotZ = (float)rnd.NextDouble() * maxAngle;
+
+            this.transform.Rotate (
+                addX ? rotX : -rotX,
+                addY ? rotY : -rotY,
+                addZ ? rotZ : -rotZ
+            );
+        }
     }
 }
