@@ -108,6 +108,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   move: 1
-  radius: 0.25
+  radius: 0.025
   rotate: 1
   maxAngle: 5
+  pulse: 1
+  interval: 2

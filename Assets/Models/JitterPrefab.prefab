@@ -111,7 +111,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcce3601f988d48928c59f3d1b3e1361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0.25
+  move: 1
+  radius: 0.025
+  rotate: 0
+  maxAngle: 15
+  pulse: 1
+  interval: 2
 --- !u!135 &135463747888491906
 SphereCollider:
   m_ObjectHideFlags: 1
