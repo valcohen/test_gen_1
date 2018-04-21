@@ -10,11 +10,20 @@ public class Jitter : MonoBehaviour {
     public bool rotate = true;
     public float maxAngle = 15;
 
+    public bool pulse = true;
+    public float interval = 2;
+
+
     private static System.Random rnd = new System.Random();
+    private Vector3 initialPosition;
 
     // Use this for initialization
 	void Start () {
-    
+        initialPosition = this.transform.position;
+
+        if (pulse) {
+            InvokeRepeating ("reset", interval, interval);
+        }
     }
 	
 	// Update is called once per frame
@@ -47,4 +56,10 @@ public class Jitter : MonoBehaviour {
             );
         }
     }
+
+    private void reset () {
+        this.transform.position = initialPosition;
+        this.transform.rotation = Quaternion.identity;
+    }
+
 }

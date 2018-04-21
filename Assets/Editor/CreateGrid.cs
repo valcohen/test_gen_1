@@ -6,11 +6,12 @@ using UnityEditor;
 public class CreateGrid : ScriptableWizard {
 
     public Transform prefab;
-    public int rows     = 10;
-    public int columns  = 10;
-    public int layers   = 1;
-    public float gap    = 2f;
-    public bool color   = true;
+    public int      rows    = 10;
+    public int      columns = 10;
+    public int      layers  = 1;
+    public float    gap     = 2f;
+    public bool     color   = true;
+    public float    alpha   = 0.25f;    // 1 == opaque, 0 == clear
 
     [MenuItem("Custom/Create Grid...")]
     static void CreateWizard()
@@ -31,7 +32,7 @@ public class CreateGrid : ScriptableWizard {
         parent.transform.position = pos;
         if (prefab == null) { prefab = createSphere (parent).transform; }
 
-        Color prefabColor = new Color (0, 0, 0);
+        Color prefabColor = new Color (0, 0, 0, alpha);  // TODO: limit Alpha
         // normalize color range (0..1): 1 / dimension 
         float xStep = 1.0f / columns; // r
         float yStep = 1.0f / layers;  // g
